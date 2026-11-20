@@ -11,7 +11,7 @@ pipeline {
         stage('Build calc-service') {
             steps {
                 dir('calc-service') {
-                    sh 'docker build -t calculator-calc:latest .'
+                    sh 'docker build -t 192.168.10.95:5000/calculator-calc:latest .'
                 }
             }
         }
@@ -19,7 +19,7 @@ pipeline {
         stage('Build sum-service') {
             steps {
                 dir('sum-service') {
-                    sh 'docker build -t calculator-sum:latest .'
+                    sh 'docker build -t 192.168.10.95:5000/calculator-sum:latest .'
                 }
             }
         }
@@ -27,7 +27,7 @@ pipeline {
         stage('Build sub-service') {
             steps {
                 dir('sub-service') {
-                    sh 'docker build -t calculator-sub:latest .'
+                    sh 'docker build -t 192.168.10.95:5000/calculator-sub:latest .'
                 }
             }
         }
@@ -35,7 +35,7 @@ pipeline {
         stage('Build mul-service') {
             steps {
                 dir('mul-service') {
-                    sh 'docker build -t calculator-mul:latest .'
+                    sh 'docker build -t 192.168.10.95:5000/calculator-mul:latest .'
                 }
             }
         }
@@ -43,15 +43,26 @@ pipeline {
         stage('Build div-service') {
             steps {
                 dir('div-service') {
-                    sh 'docker build -t calculator-div:latest .'
+                    sh 'docker build -t 192.168.10.95:5000/calculator-div:latest .'
                 }
+            }
+        }
+        stage('Push images') {
+            steps {
+                sh '''
+                    docker push 192.168.10.95:5000/calculator-calc:latest
+                    docker push 192.168.10.95:5000/calculator-sum:latest
+                    docker push 192.168.10.95:5000/calculator-sub:latest
+                    docker push 192.168.10.95:5000/calculator-mul:latest
+                    docker push 192.168.10.95:5000/calculator-div:latest
+                '''
             }
         }
     }
 
     post {
         success {
-            echo 'CI : toutes les images ont été construites avec succès !'
+            echo 'Toutes les images ont été construites et publiées dans le Registry !'
         }
         failure {
             echo 'CI : échec du pipeline.'
