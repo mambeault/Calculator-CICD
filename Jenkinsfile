@@ -62,8 +62,6 @@ pipeline {
             steps {
                 sh '''
                     kubectl apply -n default -f kubernetes/
-                    # Refresh Pods even when the image tag remains latest.
-                    kubectl rollout restart -n default deployment/calculator-calc deployment/calculator-sum deployment/calculator-sub deployment/calculator-mul deployment/calculator-div
                     for service in calc sum sub mul div; do
                         kubectl rollout status -n default deployment/calculator-$service --timeout=180s
                     done
